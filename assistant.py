@@ -41,14 +41,23 @@ def help_command(update: Update, _: CallbackContext) -> None:
 def parser_message(bot, update):
     message = bot.message.text
     if re.search(r'^[Ww]$', message):
-        bot.message.reply_text('Погода')
+        bot.message.reply_text(get_weather())
     else:
         bot.message.reply_text('?????')
+
+def get_weather():
+    try:
+        response = requests.get(url_wttr)
+        weather = response.json()
+        with open('weatherTXT.json', 'w') as file:
+            file.write(response.text)
+        return 'Ok'
+    except requests.exceptions.RequestException:
+        logger.error('Error: get_weather')
+        return 'Error get_weather'
     # print(mess)
     # bot.message.reply_text('parser_message Привет, я бот')
 # response = requests.get(url)
-# with open('weatherTXT.json', 'w') as file:
-    # file.write(response.text)
 # print(response.url)  # выдаст url запроса который был отправлен
 # print(response.text)
     

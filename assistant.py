@@ -14,7 +14,8 @@ load_dotenv()
 
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-url_wttr = 'https://wttr.in/yaroslavl?format=j1&lang=ru'
+# url_wttr = 'https://wttr.in/yaroslavl?format=j1&lang=ru'
+url_wttr = 'https://wttr.in/yaroslavl?T&lang=ru'
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -46,15 +47,15 @@ def parser_message(bot, update):
         bot.message.reply_text('?????')
 
 def get_weather():
-    # try:
-        # response = requests.get(url_wttr)
+    try:
+        response = requests.get(url_wttr)
         # weather = response.json()
         # with open('weatherTXT.json', 'w') as file:
             # file.write(response.text)
-    return 'Ok'
-    # except requests.exceptions.RequestException:
-        # logger.error('Error: get_weather')
-        # return 'Error get_weather'
+        return response
+    except requests.exceptions.RequestException:
+        logger.error('Error: get_weather')
+        return 'Error get_weather'
         
     # print(mess)
     # bot.message.reply_text('parser_message Привет, я бот')

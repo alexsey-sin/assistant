@@ -15,7 +15,6 @@ load_dotenv()
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 # url_wttr = 'https://wttr.in/yaroslavl?format=j1&lang=ru'
-url_wttr = 'https://wttr.in/yaroslavl?T&lang=ru'
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -23,7 +22,8 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
+wait_city = False
+city = 'Yaroslavl'
 
 def start_command(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
@@ -36,23 +36,58 @@ def start_command(update: Update, _: CallbackContext) -> None:
 
 def help_command(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    message = (
+        '/help - получение справки\n'
+        '/city - город для получения метеосводок\n'
+        'W(w) - получение метеоданных'
+    )
+    update.message.reply_text(message)
+    
+    
+def city_command(update: Update, _: CallbackContext) -> None:
+    """Send a message when the command /city is issued."""
+    global wait_city
+    wait_city = True
+    update.message.reply_text('Введите название города.')
 
 
 def parser_message(bot, update):
+    global wait_city, city
+    
     message = bot.message.text
+    if wait_city:
+        city = message
+        wait_city = False
+        bot.message.reply_text('Ok')
+        return
     if re.search(r'^[Ww]$', message):
         bot.message.reply_text(get_weather())
     else:
         bot.message.reply_text('?????')
 
 def get_weather():
+    global city
     try:
-        response = requests.get(url_wttr)
+        url_wttr = f'https://wttr.in/{city}?M&format=j1&lang=ru'
+        resp = requests.get(url_wttr)
+        response = resp.json()
+        
+        current_condition = response.get('current_condition')
+        if current_condition is not None:
+            lang_ru = current_condition[0].get('lang_ru')
+            condition = lang_ru[0].get('value')
+            temp_C = current_condition[0].get('temp_C')
+            if temp_C.startswith('-') == False:
+                temp_C = '+' + temp_C
+            visibility = current_condition[0].get('visibility')
+            message = (
+                f'{city}: {temp_C} *C\n{condition}\n'
+                f'Видимость {visibility} км\n'
+            )
         # weather = response.json()
         # with open('weatherTXT.json', 'w') as file:
-            # file.write(response.text)
-        return response.text
+            # file.write(resp.text)
+        return message
     except requests.exceptions.RequestException:
         logger.error('Error: get_weather')
         return 'Error get_weather'
@@ -70,6 +105,7 @@ def main():
     
     dispatcher.add_handler(CommandHandler("start", start_command))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("city", city_command))
 
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, parser_message))
     

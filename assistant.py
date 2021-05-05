@@ -46,15 +46,16 @@ def parser_message(bot, update):
         bot.message.reply_text('?????')
 
 def get_weather():
-    try:
+    # try:
         # response = requests.get(url_wttr)
         # weather = response.json()
         # with open('weatherTXT.json', 'w') as file:
             # file.write(response.text)
-        return 'Ok'
-    except requests.exceptions.RequestException:
-        logger.error('Error: get_weather')
-        return 'Error get_weather'
+    return 'Ok'
+    # except requests.exceptions.RequestException:
+        # logger.error('Error: get_weather')
+        # return 'Error get_weather'
+        
     # print(mess)
     # bot.message.reply_text('parser_message Привет, я бот')
 # response = requests.get(url)

@@ -64,7 +64,7 @@ def get_weather():
     
     
 def main():
-    updater = Updater(TELEGRAM_TOKEN)
+    updater = Updater(TELEGRAM_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     
     dispatcher.add_handler(CommandHandler("start", start_command))

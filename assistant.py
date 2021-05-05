@@ -47,8 +47,8 @@ def parser_message(bot, update):
 
 def get_weather():
     try:
-        response = requests.get(url_wttr)
-        weather = response.json()
+        # response = requests.get(url_wttr)
+        # weather = response.json()
         # with open('weatherTXT.json', 'w') as file:
             # file.write(response.text)
         return 'Ok'

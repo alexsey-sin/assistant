@@ -80,3 +80,18 @@ if __name__ == '__main__':
 
 # ============================================================================
 # https://github.com/python-telegram-bot/python-telegram-bot/blob/master/examples/conversationbot2.py
+'''
+Одноразовые коды восстановления для heroku.com
+HWC9E0M1MA
+CDH35ZDSQ4
+XY9R2WHT2V
+0WYBKICFXQ
+0M3SNKNQM3
+42YQKVJBK6
+JADL58VKLJ
+S52KT1KOR0
+RUDPW6Y28U
+CL8VAD2HGV
+
+
+'''

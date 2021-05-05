@@ -49,8 +49,8 @@ def get_weather():
     try:
         response = requests.get(url_wttr)
         weather = response.json()
-        with open('weatherTXT.json', 'w') as file:
-            file.write(response.text)
+        # with open('weatherTXT.json', 'w') as file:
+            # file.write(response.text)
         return 'Ok'
     except requests.exceptions.RequestException:
         logger.error('Error: get_weather')
